@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.orgyan.controllers;
 
 import java.io.Serializable;
@@ -18,7 +13,7 @@ import net.orgyan.models.Offer;
 
 /**
  *
- * @author yan
+ * @author yandry pozo
  */
 public class OfferJpaController implements Serializable {
 
@@ -134,5 +129,5 @@ public class OfferJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

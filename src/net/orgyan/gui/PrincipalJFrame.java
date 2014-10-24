@@ -1,7 +1,12 @@
 package net.orgyan.gui;
 
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import net.orgyan.controllers.OfferJpaController;
+import net.orgyan.models.Offer;
 import net.orgyan.utils.JPAUtil;
 
 /**
@@ -9,22 +14,44 @@ import net.orgyan.utils.JPAUtil;
  * @author yandry pozo
  */
 public class PrincipalJFrame extends javax.swing.JFrame {
-    
+
     private OfferJpaController offerJPAController;
-            
+    DefaultTableModel tableModelOffer;
+    String[] columNames = new String[]{"Name", "Value", "Created at"};
+
     public PrincipalJFrame() {
+        preInitComponents();
         initComponents();
-        this.offerJPAController = new OfferJpaController(JPAUtil.getEntityManagerFactory());
+        updateOfferTable();
     }
-    
+
     private void updateOfferTable() {
-        
+        List<Offer> allOffers = offerJPAController.findOfferEntities();
+
+        if (allOffers.size() == tableModelOffer.getRowCount() && tableModelOffer.getRowCount() > 0) {
+            return;
+        }
+        offerTable.removeAll();
+        for (Offer offer : allOffers) {
+            String[] row = new String[]{
+                offer.getName(),
+                String.valueOf(offer.getId()),
+                offer.getCreateAt().toString()
+            };
+            System.out.println(Arrays.toString(row));
+            tableModelOffer.addRow(row);
+        }
     }
-    
+
     private void close() {
         System.exit(0);
     }
-    
+
+    private void preInitComponents() {
+        this.tableModelOffer = new DefaultTableModel(null, columNames);
+        this.offerJPAController = new OfferJpaController(JPAUtil.getEntityManagerFactory());
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -38,18 +65,9 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         helpMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Crud App");
 
-        offerTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        offerTable.setModel(tableModelOffer);
         jScrollPane1.setViewportView(offerTable);
 
         fileMenu.setText("File");
@@ -99,7 +117,7 @@ public class PrincipalJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        // TODO add your handling code here:
+        this.close();
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
@@ -133,7 +151,6 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        
         java.awt.EventQueue.invokeLater(() -> {
             new PrincipalJFrame().setVisible(true);
         });
