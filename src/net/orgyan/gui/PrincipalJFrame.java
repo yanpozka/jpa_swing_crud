@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import net.orgyan.controllers.OfferJpaController;
 import net.orgyan.models.Offer;
 import net.orgyan.utils.JPAUtil;
@@ -31,7 +30,9 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         if (allOffers.size() == tableModelOffer.getRowCount() && tableModelOffer.getRowCount() > 0) {
             return;
         }
-        offerTable.removeAll();
+        this.tableModelOffer = new DefaultTableModel(null, columNames);
+        offerTable.setModel(tableModelOffer);
+        
         for (Offer offer : allOffers) {
             String[] row = new String[]{
                 offer.getName(),
@@ -41,6 +42,7 @@ public class PrincipalJFrame extends javax.swing.JFrame {
             System.out.println(Arrays.toString(row));
             tableModelOffer.addRow(row);
         }
+        System.gc();
     }
 
     private void close() {
@@ -48,8 +50,8 @@ public class PrincipalJFrame extends javax.swing.JFrame {
     }
 
     private void preInitComponents() {
-        this.tableModelOffer = new DefaultTableModel(null, columNames);
         this.offerJPAController = new OfferJpaController(JPAUtil.getEntityManagerFactory());
+        this.tableModelOffer = new DefaultTableModel(null, columNames);
     }
 
     @SuppressWarnings("unchecked")
@@ -60,6 +62,7 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         offerTable = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
@@ -71,6 +74,14 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(offerTable);
 
         fileMenu.setText("File");
+
+        jMenuItem1.setText("Update List");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        fileMenu.add(jMenuItem1);
 
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -124,6 +135,10 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "CRUD application with JPA and Swing");
     }//GEN-LAST:event_helpMenuItemActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        updateOfferTable();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -162,6 +177,7 @@ public class PrincipalJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable offerTable;
     // End of variables declaration//GEN-END:variables
