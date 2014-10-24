@@ -4,6 +4,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import net.orgyan.controllers.OfferJpaController;
 import net.orgyan.controllers.exceptions.IllegalOrphanException;
+import net.orgyan.utils.JPAUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,32 +15,28 @@ import static org.junit.Assert.*;
  * @author yandry pozo
  */
 public class OfferTest {
-    
-    final String persitence_name = "JPASwingCrudPU";
-    OfferJpaController offJC;
-    EntityManagerFactory emf;
+
+    OfferJpaController offerJPAController;
 
     @Before
     public void setUp() {
-        emf = Persistence.createEntityManagerFactory(persitence_name);
-        this.offJC = new OfferJpaController(emf);
+        this.offerJPAController = new OfferJpaController(JPAUtil.getEntityManagerFactory());
     }
 
     @After
     public void tearDown() {
-        emf.close();
     }
 
     @Test
     public void newOfferCar() throws IllegalOrphanException {
-        int amount = offJC.getOfferCount();
+        int amount = offerJPAController.getOfferCount();
 
         Offer offer = new Offer();
         offer.setName("Car");
         offer.setValue(5);
-        offJC.create(offer);
-        
-        assertEquals(amount + 1, offJC.getOfferCount());
+        offerJPAController.create(offer);
+
+        assertEquals(amount + 1, offerJPAController.getOfferCount());
     }
-    
+
 }
